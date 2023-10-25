@@ -14,3 +14,4 @@ Code for testing the capacitance, connectivity, HV holding, and resistance of HV
 - Ramps each GEM or TG up to its designed voltage in 10 steps, measures current and calculates resistance
 - save the I vs V and R vs V curves to ROOT files
 - code lives on OPC0 machine at /home/phnxrc/TPC/bin/TPC-mpod-utilities
+- requires you to compile .C code: ```g++ -Wall -Wextra -o Plot_Resistances Plot_Resistances2.C `root-config --cflags --libs` ```
