@@ -50,7 +50,7 @@ for w in range(NFiles):
     gr[w].Draw( 'ACP' )
     gr[w].Fit(e_fit[w],"R+")
 
-    par1 = e1.GetParameters()
+    par1 = e_fit[w].GetParameters()
     print("PRINT par1:")
     print(par1[0]) #Bias
     print(par1[1]) #Constant
@@ -104,4 +104,5 @@ for ig,g in enumerate(gr):
     leg  .AddEntry(g  ,title[ig]+' {:.4f} nF'.format(1.0/slope[ig]*1e-3*1/(R*1e6)*1e9),"p");	    
 
 leg  .Draw()
+c.Print("./Plots/CTest.png")
 #gBenchmark.Show( 'fit1' )
