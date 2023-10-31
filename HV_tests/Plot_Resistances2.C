@@ -1,6 +1,10 @@
  //plot the resistances and currents as a function of voltages and save the TH1F to a root file
  
 #include <iostream>
+#include <chrono>
+#include <ctime> 
+#include <string>
+#include <sstream>
 #include <TFile.h>
 #include <TH1.h>
 #include <TH2.h>
@@ -19,7 +23,22 @@ int main(int argc, char *argv[])
   //initialize a TApplication for on-the-fly plotting
   TApplication app("Root app", &argc, argv);
 
-  int n_points=(argc-1)/3; // we will always have 31 points
+  //initialize a file to save in a directory 1 under the current one called ROOT_FILES
+
+  //first get a timestamp and cast as string
+  auto ts = std::chrono::system_clock::now();
+  std::time_t start_time = std::chrono::system_clock::to_time_t(ts);
+  std::stringstream ss;
+  ss << start_time;
+  std::string time_stamp = ss.str();
+
+  //then add timpestamp to file name
+  char file_name[256];
+  sprintf(file_name,"ROOT_FILES/%s_RESISTOR_TEST.root",time_stamp.c_str());
+  std::unique_ptr<TFile> outputfile( TFile::Open( file_name, "RECREATE" ) );	
+
+  // we will always have 31 points
+  int n_points=(argc-1)/3; 
  
   //initialize arays of floats
   float voltages[n_points]={0};
@@ -58,7 +77,9 @@ int main(int argc, char *argv[])
   resistances_vs_volt->GetHistogram()->SetMaximum(max_res+2);
  
   resistances_vs_volt->Draw("AC*");
- 
+
+  resistances_vs_volt->Write();
+
   app.Run();
  
   return 0;
