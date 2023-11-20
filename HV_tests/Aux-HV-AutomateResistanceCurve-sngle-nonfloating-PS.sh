@@ -90,7 +90,17 @@ do
     arr+=($i_meas)
     arr+=($r_meas)
   done
+
+  #zero all the channels before moving on to next one
  
+  for (( i=0; i<16; i++ ))
+  do
+    index=$(( $card + $i ))
+    #Set voltage of channel at the index to zero (performs a rampdown without setting the channel to "off")
+    echo "snmpset -Oqv -v 2c -m +WIENER-CRATE-MIB -c guru $AUX_IP outputVoltage.u$index F 0"
+    snmpset -Oqv -v 2c -m +WIENER-CRATE-MIB -c guru $AUX_IP outputVoltage.u$index F 0
+  done
+
   #pass arrays to ROOT function to plot and save
   #root -b -l "Plot_Resistances.C(${volt_arr[@]},${curr_arr[@]},${resi_arr[@]},$module)"
  
