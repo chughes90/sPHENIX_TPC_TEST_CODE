@@ -1,6 +1,7 @@
  //plot the resistances and currents as a function of voltages and save the TH1F to a root file
  
 #include <iostream>
+#include <unistd.h>
 #include <chrono>
 #include <ctime> 
 #include <string>
@@ -13,6 +14,7 @@
 #include <TNtuple.h>
 #include <TApplication.h>
 #include <TGraph.h>
+#include <TCanvas.h>
 #include <numeric>
 #include <iostream>
 using namespace std;
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
 
   resistances_vs_volt->Write();
 
-  app.Run();
+  app.Run(kTRUE);
  
   return 0;
  
