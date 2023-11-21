@@ -8,12 +8,12 @@ dV_arr=(301 1179 371 1179 495 30 555 590)
  
 #Loop through all channels
 card=100
-#for (( i=0; i<8; i++ ))
+#for (( i=1; i<9; i++ ))
 for (( i=8; i<9; i++ ))
 do
   read -p "Which module are you testing?" module_readback
   module="$module_readback"
-  pos=$(( $i + 1 ))
+  pos=$(( $i ))
   read -p "Move SHV cable to Position $pos. Have you done that: true/false ?" move
  
   while [ $move != "true" ]
@@ -22,7 +22,9 @@ do
     read -p "HAVE YOU MOVED CABLE SHV CABLE TO POSITION $pos: true/false ?" move
   done
   
-  index=$(( $card + $i ))
+  #assume we are using channel 8 in Eric's crate
+
+  index=$(( $card + 8 ))
   
   #get a 10% increment
   
@@ -68,7 +70,11 @@ do
  
     v_meas_str=" $(snmpget -Oqv -v 2c -m +WIENER-CRATE-MIB -c guru $AUX_IP outputMeasurementTerminalVoltage.u$index)"
     i_meas_str=" $(snmpget -Op +020.12 -Oqv -v 2c -m +WIENER-CRATE-MIB -c guru $AUX_IP outputMeasurementCurrent.u$index)"
-  
+
+    #remove the +/- from the string
+    v_meas_str=`echo $v_meas_str | cut -c 2-`
+    i_meas_str=`echo $i_meas_str | cut -c 2-`
+
     #setting space as a delimiter, we know we just want everything before the space
     IFS=' ' read -ra ADDR_v<<<"$v_meas_str"
     read -ra ADDR_i<<<"$i_meas_str"
@@ -107,3 +113,5 @@ do
   ./Plot_Resistances "${arr[@]}"
  
 done
+
+
