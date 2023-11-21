@@ -56,10 +56,13 @@ int main(int argc, char *argv[])
  
   for (int i = 1; i <= (argc-3); i+=3)
   {
-    voltages[counter] = -1*std::stof(argv[i]);
-    currents[counter] = -1*std::stof(argv[i+1]);
-    resistances[counter] = std::stof(argv[i+2]);
- 
+    voltages[counter] = TMath::Abs(std::stof(argv[i]));
+    currents[counter] = TMath::Abs(std::stof(argv[i+1]));
+    resistances[counter] = TMath::Abs(std::stof(argv[i+2]));
+
+    // If you have a resistance > 1000 MOhm (1 GOhm), set it to 1000 MOhm
+    if(resistances[counter] > 1000){resistances[counter] = 1000;}
+
     if(resistances[counter] > max_res){max_res = resistances[counter];}
  
     counter++;
@@ -74,7 +77,7 @@ int main(int argc, char *argv[])
  
   //set y-axis minimum of TGraph to 0 and maximum to max_res + 2
   resistances_vs_volt->GetHistogram()->SetMinimum(0.0);
-  resistances_vs_volt->GetHistogram()->SetMaximum(max_res+2);
+  resistances_vs_volt->GetHistogram()->SetMaximum(1.2*max_res);
  
   resistances_vs_volt->Draw("AC*");
 
